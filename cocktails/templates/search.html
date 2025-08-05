@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cocktail Search</title>
+</head>
+<body>
+    <h1>🍹 Search for Cocktails</h1>
+    <form method="get">
+        <input type="text" name="query" placeholder="e.g. mojito, vodka" required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if query %}
+        <h2>Showing results for: "{{ query }}"</h2>
+    {% endif %}
+
+    {% if results %}
+        <ul>
+            {% for drink in results %}
+                <li>
+                    <strong>{{ drink.strDrink }}</strong><br>
+                    <img src="{{ drink.strDrinkThumb }}" width="200"><br><br>
+                </li>
+            {% endfor %}
+        </ul>
+    {% elif query %}
+        <p>No results found.</p>
+    {% endif %}
+</body>
+</html>
