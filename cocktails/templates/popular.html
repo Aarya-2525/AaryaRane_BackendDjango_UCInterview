@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Popular Cocktails</title>
+</head>
+<body>
+    <h1>🍸 Popular Cocktails</h1>
+
+    <ul>
+        {% for cocktail in popular %}
+            <li>{{ cocktail.name }} — searched {{ cocktail.count }} times</li>
+        {% empty %}
+            <li>No searches yet!</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'cocktails_search' %}">Back to Search</a>
+</body>
+</html>

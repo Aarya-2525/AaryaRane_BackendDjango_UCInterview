@@ -1,5 +1,6 @@
 import requests
 from django.shortcuts import render
+from .models import CocktailSearch
 
 def cocktails_search(request):
     query = request.GET.get("query")
@@ -11,11 +12,20 @@ def cocktails_search(request):
         data = response.json()
         results = data.get("drinks")
 
+        if results:  # only save if something is found
+            for drink in results:
+                name = drink["strDrink"]
+
+                obj, created = CocktailSearch.objects.get_or_create(name=name)
+                obj.count += 1
+                obj.save()
+
     context = {
-        'query': query,
-        'results': results,
+        "query": query,
+        "results": results,
     }
-    return render(request, 'search.html', context)
+    return render(request, "search.html", context)
+
 
 def cocktail_detail(request, cocktail_id):
     url = f"https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={cocktail_id}"
@@ -36,3 +46,7 @@ def cocktail_detail(request, cocktail_id):
         "ingredients": ingredients,
     }
     return render(request, "details.html", context)
+
+def popular_cocktails(request):
+    popular = CocktailSearch.objects.order_by("-count")[:10]  # top 10
+    return render(request, "popular.html", {"popular": popular})
